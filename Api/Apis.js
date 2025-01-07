@@ -31,9 +31,9 @@ router.post("/createuser", async (req, res) => {
         userId: user.id,
       },
     };
-    const authToken = jwt.sign(data, secretKey, { expiresIn: '1h' });
-
-    res.send({authToken });
+    const authToken = jwt.sign(data, secretKey, { expiresIn: "1h" });
+    const expiry = Math.floor(Date.now() / 1000) + 3600;
+    res.send({ authToken, expiry });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
@@ -60,8 +60,9 @@ router.post("/loginuser", async (req, res) => {
         userId: user.id,
       },
     };
-    const authToken = jwt.sign(data, secretKey, { expiresIn: '1h' });
-    res.send({authToken});
+    const authToken = jwt.sign(data, secretKey, { expiresIn: "1h" });
+    const expiry = Math.floor(Date.now() / 1000) + 3600;
+    res.send({ authToken, expiry });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
@@ -72,7 +73,7 @@ router.get("/getuser", fetchuser, async (req, res) => {
   try {
     let userId = req.user.userId;
     const user = await User.findById(userId).select("-password");
-    res.send({user});
+    res.send({ user });
   } catch (error) {
     console.log(error.message);
     res.status(500).send("An Error Occurred");
