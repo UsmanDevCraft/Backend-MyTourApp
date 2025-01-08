@@ -71,9 +71,9 @@ router2.get("/getalltours", fetchuser, async (req, res) => {
 });
 
 // < ------------------------------ API for get tour by id ------------------------------ >
-router2.get("/gettourbyid", fetchuser, async (req, res) => {
+router2.post("/gettourbyid", fetchuser, async (req, res) => {
+  const { tourId } = req.body;
   try {
-    const { tourId } = req.body;
     let tours = await BookTour.find({ user: req.user.userId, tourId });
     if (!tours) {
       return res
