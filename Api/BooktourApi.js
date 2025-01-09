@@ -87,8 +87,8 @@ router2.post("/gettourbyid", fetchuser, async (req, res) => {
 });
 
 // < ------------------------------ API for get tour by id and update ------------------------------ >
-router2.put("/gettourbyidandupdate/:id", fetchuser, async (req, res) => {
-  const { name, email, phone, adults, childs } = req.body;
+router2.put("/gettourbyidandupdate", fetchuser, async (req, res) => {
+  const { tourId, name, email, phone, adults, childs } = req.body;
   try {
     let newTour = {};
     if (name) {
@@ -107,21 +107,22 @@ router2.put("/gettourbyidandupdate/:id", fetchuser, async (req, res) => {
       newTour.childs = nachildsme;
     }
 
-    let tour = await BookTour.findById(req.params.id);
+    let tour = await BookTour.find({ tourId });
     if (!tour) {
       return res.status(404).send("Tour Not Found!");
     }
 
-    if (tour.user.toString() !== req.user.userId) {
+    if (tour[0].user.toString() !== req.user.userId) {
       return res.status(401).send("Not Allowed");
     }
 
     tour = await BookTour.findByIdAndUpdate(
-      req.params.id,
+      tour[0]._id,
       { $set: newTour },
       { new: true }
     );
     res.send({ tour });
+    // res.send({ user: req.user.userId, tourId: tour.user });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
