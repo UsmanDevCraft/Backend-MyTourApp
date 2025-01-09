@@ -86,4 +86,45 @@ router2.post("/gettourbyid", fetchuser, async (req, res) => {
   }
 });
 
+// < ------------------------------ API for get tour by id and update ------------------------------ >
+router2.put("/gettourbyidandupdate/:id", fetchuser, async (req, res) => {
+  const { name, email, phone, adults, childs } = req.body;
+  try {
+    let newTour = {};
+    if (name) {
+      newTour.name = name;
+    }
+    if (email) {
+      newTour.email = email;
+    }
+    if (phone) {
+      newTour.phone = phone;
+    }
+    if (adults) {
+      newTour.adults = adults;
+    }
+    if (childs) {
+      newTour.childs = nachildsme;
+    }
+
+    let tour = await BookTour.findById(req.params.id);
+    if (!tour) {
+      return res.status(404).send("Tour Not Found!");
+    }
+
+    if (tour.user.toString() !== req.user.userId) {
+      return res.status(401).send("Not Allowed");
+    }
+
+    tour = await BookTour.findByIdAndUpdate(
+      req.params.id,
+      { $set: newTour },
+      { new: true }
+    );
+    res.send({ tour });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+});
+
 module.exports = router2;
