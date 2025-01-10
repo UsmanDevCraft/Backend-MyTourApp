@@ -104,7 +104,7 @@ router2.put("/gettourbyidandupdate", fetchuser, async (req, res) => {
       newTour.adults = adults;
     }
     if (childs) {
-      newTour.childs = nachildsme;
+      newTour.childs = childs;
     }
 
     let tour = await BookTour.find({ tourId });
