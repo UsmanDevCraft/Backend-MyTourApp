@@ -53,7 +53,7 @@ const bookTourSchema = new Schema({
   city: {
     type: String,
     required: true,
-  }
+  },
 });
 
 module.exports = mongoose.model("BookTour", bookTourSchema);
